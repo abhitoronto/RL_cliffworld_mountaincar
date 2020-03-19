@@ -34,17 +34,36 @@ function [V, policy] = linear_programming(world)
     %% Initialization
     % MDP
     mdp = world.mdp;
-    T = mdp.T;
-    R = mdp.R;
+    T = mdp.T; % transition_probability
+    R = mdp.R; % Reward function 
     gamma = mdp.gamma;
     
     % Dimensions
     num_actions = length(T);
     num_states = size(T{1}, 1);
 
+    
+    fprintf('\n\n\t########### Linear Programming ########\n')
+    
     %% [TODO] Compute optimal value function (see [2] for reference)
     % V = ...;
     
+    f = ones(num_states,1);
+    A = [];
+    b = [];
+    for action_index = 1:1:num_actions 
+        A = [A; gamma*T{action_index} - eye(num_states)];
+        b = [b; -diag(T{action_index}*R{action_index}')];
+    end
+    
+    V = linprog(f, A, b);
+    
     %% [TODO] Compute an optimal policy
     % policy = ...;
+    Q = zeros(num_actions, num_states);
+    for action_index = 1:1:num_actions
+        Q(action_index, :) = diag(T{action_index}*R{action_index}') + gamma*T{action_index}*V;
+    end
+    
+    [temp, policy] = max(Q,[],1);
 end

@@ -60,11 +60,13 @@ precision_pe = 0.01;
 max_ite_pi = 100;
 max_ite_pe = 100;
 
+tic;
 % ======================= [TODO] GPI Implementation =======================
 % Complete implementation in 'generalized_policy_iteration'
 [v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
     precision_pe, max_ite_pi, max_ite_pe);
 % =========================================================================
+disp("[TIME] Policy Iteration took: " + num2str(toc) + " secs");
 
 % Visualization
 plt_title = 'Generalized Policy Iteration';
@@ -84,10 +86,12 @@ saveas(plt_gpi, strcat(save_dir, 'gpi_plot.png'), 'png');
 %        https://www.mathworks.com/help/optim/ug/linprog.html
 %   2) cvx library (requires installation): http://cvxr.com/cvx/
 
+tic;
 % =================== [TODO] LP Approach Implementation ===================
 % Complete implementation in 'linear_programming'
 [v_lp, policy_lp] = linear_programming(world);
 % =========================================================================
+disp("[TIME] Linear Programming took: " + num2str(toc) + " secs");
 
 % Visualization
 plt_title = 'Linear Program';

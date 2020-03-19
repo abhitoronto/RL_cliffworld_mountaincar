@@ -47,8 +47,8 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
     %% Initialization
     % MDP
     mdp = world.mdp;
-    T = mdp.T;
-    R = mdp.R;
+    T = mdp.T; % transition_probability
+    R = mdp.R; % Reward function 
     gamma = mdp.gamma;
 
     % Dimensions
@@ -68,18 +68,46 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
         selected_action = random_act_index(s);
         policy(s, selected_action) = 1;
     end
-
-    while true
+    
+    fprintf('\n\n\t########### Policy Iteration ########\n')
+    
+    policy_last = [];
+    for  i = 1:max_ite_pe
+        policy_last = policy;
+        
         %% [TODO] policy Evaluation (PE) (Section 2.6 of [1])
         % V = ...;
+        V_last = [];
+        
+        for j = 1:max_ite_pi
+            V_last = V;
+            Q = zeros(num_states, num_actions);
+            for ai = 1:1:num_actions
+                Q(:, ai) = diag(T{ai}*transpose(R{ai})) + gamma*T{ai}*V;
+            end
+            V = sum(policy.*Q, 2);
+            V_error = norm(V-V_last);
+            if V_error < precision_pi
+                disp(num2str(i) + ": " + num2str(j) +  ": Policy Iteration Converged: " + num2str(V_error));
+                break;
+            end
+        end
         
         %% [TODO] Policy Improvment (PI) (Section 2.7 of [1])
         % policy = ...;
+        [temp, policy_index] = max(Q,[],2);
+        policy = zeros(num_states, num_actions);
+        for s = 1:1:num_states
+            selected_action = policy_index(s);
+            policy(s, selected_action) = 1;
+        end
 
+        policy_error = norm(policy-policy_last);
         % Check algorithm convergence
-        % if ...
-        %       break
-        % end
+        if policy_error < precision_pe
+            disp(num2str(i) + ": Policy Evaluation Converged: " + num2str(policy_error));
+            break;
+        end
     end
     
     % Return deterministic policy for plotting
