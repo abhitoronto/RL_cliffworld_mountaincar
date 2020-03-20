@@ -69,11 +69,9 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
         policy(s, selected_action) = 1;
     end
     
-    fprintf('\n\n\t########### Policy Iteration ########\n')
-    
-    policy_last = [];
+    V_last_g = [];
     for  i = 1:max_ite_pe
-        policy_last = policy;
+        V_last_g = V;
         
         %% [TODO] policy Evaluation (PE) (Section 2.6 of [1])
         % V = ...;
@@ -87,8 +85,8 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
             end
             V = sum(policy.*Q, 2);
             V_error = norm(V-V_last);
-            if V_error < precision_pi
-                disp(num2str(i) + ": " + num2str(j) +  ": Policy Iteration Converged: " + num2str(V_error));
+            if V_error <= precision_pi
+                disp(num2str(i) + ": " + num2str(j) +  ": Policy Evaluation Converged: " + num2str(V_error));
                 break;
             end
         end
@@ -102,10 +100,10 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
             policy(s, selected_action) = 1;
         end
 
-        policy_error = norm(policy-policy_last);
+        final_error = norm(V-V_last_g);
         % Check algorithm convergence
-        if policy_error < precision_pe
-            disp(num2str(i) + ": Policy Evaluation Converged: " + num2str(policy_error));
+        if final_error <= precision_pe
+            disp(num2str(i) + ": Policy Iteration Converged: " + num2str(final_error));
             break;
         end
     end

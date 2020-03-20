@@ -72,18 +72,18 @@ function [Q, policy_index] = ...
     for train_loop = 1:1:training_iterations
         %% [TODO] Generate a training episode
 
-        % while ... % episode termination criteria
-            % episode_index = episode_index + 1;
+        while 
+            episode_index = episode_index + 1;
 
             % Sample current epsilon-soft policy
-            % action = ...;
+            action = ;
 
             % Interaction with environment
-            % [next_state_index, ~, reward] = one_step_gw_model(world, cur_state_index, action, 1);
+            [next_state_index, ~, reward] = one_step_gw_model(world, cur_state_index, action, 1);
 
             % Log data for the episode
             % ...
-        % end
+        end
 
         % Update Q(s,a)
         % Q = ...;

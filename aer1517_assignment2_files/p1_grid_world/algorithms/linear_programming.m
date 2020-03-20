@@ -43,7 +43,7 @@ function [V, policy] = linear_programming(world)
     num_states = size(T{1}, 1);
 
     
-    fprintf('\n\n\t########### Linear Programming ########\n')
+    fprintf('\n\n\t########### Linear Programming ########')
     
     %% [TODO] Compute optimal value function (see [2] for reference)
     % V = ...;

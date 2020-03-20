@@ -60,8 +60,10 @@ precision_pe = 0.01;
 max_ite_pi = 100;
 max_ite_pe = 100;
 
+
+fprintf('\n\n\t########### Policy Iteration ########\n')
 tic;
-% ======================= [TODO] GPI Implementation =======================
+% ======================= [TODO] PI Implementation =======================
 % Complete implementation in 'generalized_policy_iteration'
 [v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
     precision_pe, max_ite_pi, max_ite_pe);
@@ -69,14 +71,38 @@ tic;
 disp("[TIME] Policy Iteration took: " + num2str(toc) + " secs");
 
 % Visualization
-plt_title = 'Generalized Policy Iteration';
+plt_title = ' Policy Iteration';
 plt_path = true;
 plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
     plt_title, plt_path);
 
 % Save results and figure to report
-save(strcat(save_dir, 'gpi_results.mat'), 'v_gpi', 'policy_gpi');
-saveas(plt_gpi, strcat(save_dir, 'gpi_plot.png'), 'png');
+save(strcat(save_dir, 'pi_results.mat'), 'v_gpi', 'policy_gpi');
+saveas(plt_gpi, strcat(save_dir, 'pi_plot.png'), 'png');
+
+
+%%
+
+fprintf('\n\n\t########### Value Iteration ########\n')
+tic;
+max_ite_pi = 1;
+precision_vi = 0.0;
+% ======================= VII Implementation =======================
+% Complete implementation in 'generalized_policy_iteration'
+[v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
+    precision_vi, max_ite_pi, max_ite_pe);
+% =========================================================================
+disp("[TIME] Value Iteration took: " + num2str(toc) + " secs");
+
+% Visualization
+plt_title = 'Value Iteration';
+plt_path = true;
+plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
+    plt_title, plt_path);
+
+% Save results and figure to report
+save(strcat(save_dir, 'vi_results.mat'), 'v_gpi', 'policy_gpi');
+saveas(plt_gpi, strcat(save_dir, 'vi_plot.png'), 'png');
 
 %% Problem 2.1 (b): Linear Programming (LP)
 % Extra credit: Solve the grid world problem with the LP approach
