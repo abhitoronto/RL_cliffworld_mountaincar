@@ -48,7 +48,7 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
     % MDP
     mdp = world.mdp;
     T = mdp.T; % transition_probability
-    R = mdp.R; % Reward function 
+    R = mdp.R; % Reward function
     gamma = mdp.gamma;
 
     % Dimensions
