@@ -129,15 +129,15 @@ plt_lp = visualize_gw_solution(world, v_lp, policy_lp, ...
 save(strcat(save_dir, 'lp_results.mat'), 'v_lp', 'policy_lp');
 saveas(plt_lp, strcat(save_dir, 'lp_plot.png'), 'png');
 
-%% Problem 2.1 (c): Monte Carlo
-% Instruction: Implement the on-policy Monte Carlo control algorithm (with
-% epsilon-soft policies) to solve the grid world algorithm
-% Reference: Section 2.9 of [1]
+% Problem 2.1 (c): Monte Carlo
+Instruction: Implement the on-policy Monte Carlo control algorithm (with
+epsilon-soft policies) to solve the grid world algorithm
+Reference: Section 2.9 of [1]
 
 % Algorithm parameters
-epsilon = 0.2; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
-k_epsilon = 1; % epsilon decay factor
-omega = 0.1; % learning rate for updating Q
+epsilon = 0.6; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
+k_epsilon = 0.95; % epsilon decay factor
+omega = 0.15; % learning rate for updating Q
 training_iterations = 500; % maximum number of training episodes
 episode_length = 500; % length of each training episode
 
