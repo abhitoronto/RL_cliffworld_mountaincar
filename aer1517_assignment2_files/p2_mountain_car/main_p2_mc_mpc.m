@@ -32,6 +32,7 @@ addpath(genpath(pwd));
 % MPC parameters
 n_lookahead = 100; % MPC prediction horizon
 n_mpc_update = 1; % MPC update frequency
+use_model = true;
 
 % Cost function parameters
 Q = diag([100, 0]); % not penalizing velocity
@@ -131,26 +132,54 @@ for k = 1:1:max_steps
             %         the horizon [input,..., input, state', ..., state']^T
             % Note 2: The function 'get_lin_matrices' computes the
             %         Jacobians (A, B) evaluated at an operation point
+            x_prev = cur_state_mpc_update;
+            a_curr = [];
+            states_curr = [];
             Aeq = zeros(n_lookahead*(dim_state), n_lookahead*(dim_state+dim_action));
             Aeq(:, n_lookahead*(dim_action)+1:end) = ...
                                    - eye(n_lookahead*(dim_state));
-            
+            % Populate Aeq
             for s = 1:n_lookahead
                 % Get linearization points
                 actions = n_lookahead*(dim_action);
-                a_bar = x( (s-1)*dim_action + 1: s*dim_action, 1 );
-                x_bar = x( actions+(s-1)*dim_state+1: actions+(s)*dim_state);
+                if s < n_lookahead
+                    a_bar = cur_mpc_inputs(:, s);
+                    if ~use_model
+                        x_bar = cur_mpc_states(:, s);
+                    end
+                else
+                    a_bar = 0;
+                    if ~use_model
+                        [x_bar, ~, ~] = ...
+                        one_step_mc_model(world, x_prev, a_bar);
+                    end
+                end 
+                if use_model
+                    [x_bar, ~, ~] = ...
+                        one_step_mc_model(world, x_prev, a_bar);
+                end
+                a_curr = [a_curr; a_bar];
+                states_curr = [states_curr; x_bar];
+                x_prev = x_bar;
                 
                 % Get linearized model for current state and action
                 [A_, b_] = get_lin_matrices(x_bar, a_bar);
                 
                 % Populate Aeq
-                for n = 1:s
-                    Aeq()
+                if s > 1
+                    mat = A_ * Aeq((s-2)*dim_state+1:(s-1)*dim_state, 1:(s-1)*dim_action );
+                    Aeq((s-1)*dim_state+1:(s)*dim_state, 1:(s-1)*dim_action) = mat;
                 end
+                Aeq((s-1)*dim_state+1:(s)*dim_state, (s)*dim_action) = b_;
             end
             
-            % x = ...;
+            x = [a_curr; states_curr];
+            
+            beq = Aeq * x;
+            f = -(S + S')*sub_states;
+            H = S;
+            
+            x = quadprog(H,f,[],[],Aeq, beq, lb, ub);
             % =============================================================
         end
 
