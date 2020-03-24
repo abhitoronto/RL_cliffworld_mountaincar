@@ -66,7 +66,7 @@ function [next_state,next_state_noisy,reward,is_goal_state] = one_step_mc_model_
         % If car is already at goal state, remain there indefinitely
         p1 = 0.5;
         v1 = 0;
-        reward = 0;        
+        reward = 0;
     elseif p0 == -1.2
         % If car is at the other end, remain there indefinitely
         p1 = -1.2;

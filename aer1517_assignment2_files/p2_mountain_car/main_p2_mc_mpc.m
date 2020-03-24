@@ -131,7 +131,24 @@ for k = 1:1:max_steps
             %         the horizon [input,..., input, state', ..., state']^T
             % Note 2: The function 'get_lin_matrices' computes the
             %         Jacobians (A, B) evaluated at an operation point
-
+            Aeq = zeros(n_lookahead*(dim_state), n_lookahead*(dim_state+dim_action));
+            Aeq(:, n_lookahead*(dim_action)+1:end) = ...
+                                   - eye(n_lookahead*(dim_state));
+            
+            for s = 1:n_lookahead
+                % Get linearization points
+                actions = n_lookahead*(dim_action);
+                a_bar = x( (s-1)*dim_action + 1: s*dim_action, 1 );
+                x_bar = x( actions+(s-1)*dim_state+1: actions+(s)*dim_state);
+                
+                % Get linearized model for current state and action
+                [A_, b_] = get_lin_matrices(x_bar, a_bar);
+                
+                % Populate Aeq
+                for n = 1:s
+                    Aeq()
+                end
+            end
             
             % x = ...;
             % =============================================================

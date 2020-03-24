@@ -41,15 +41,17 @@ mkdir(save_dir);
 load('./mountain_car_model/mountain_car_nn');
 
 %% Generalized policy iteration
-% Algorithm parameters
+% Algorithm parameters 
 precision_pi = 0.1;
 precision_pe = 0.01;
 max_ite_pi = 100;
 max_ite_pe = 100;
 
 % Solve MDP
+tic;
 [v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
     precision_pe, max_ite_pi, max_ite_pe);
+disp("[TIME] Policy Iteration took: " + num2str(toc) + " secs");
 
 % Visualization
 plot_value = true;

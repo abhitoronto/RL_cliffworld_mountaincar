@@ -47,13 +47,9 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
     %% Initialization
     % MDP
     mdp = world.mdp;
-    T = mdp.T;
-    R = mdp.R;
+    T = mdp.T; % transition_probability
+    R = mdp.R; % Reward function
     gamma = mdp.gamma;
-
-    % Discrete states
-    POS = world.mdp.POS;
-    VEL = world.mdp.VEL;
 
     % Dimensions
     num_actions = length(T);
@@ -61,33 +57,72 @@ function [V, policy_index] = generalized_policy_iteration(world, precision_pi, p
 
     % Intialize value function
     V = zeros(num_states, 1);
+    
+    % Stochasticity parameter (epsilon)
+    epsilon = 0.0;
+    k_epsilon = 0.99;
 
     % Initialize policy
     % Note: Policy here encodes the action to be executed at state s. We
-    %       use deterministic policy here (e.g., [0,1,0,0,0] means take 
+    %       use deterministic policy here (e.g., [0,1,0,0] means take 
     %       action indexed 2)
     random_act_index = randi(num_actions, [num_states, 1]);
     policy = zeros(num_states, num_actions);
     for s = 1:1:num_states
         selected_action = random_act_index(s);
-        policy(s, selected_action) = 1;
-    end
-
-    while true
-        %% [TODO] policy Evaluation (PE) (Section 2.6 of [1])
-        
-        % V = ...;
-        
-        %% [TODO] Policy Improvment (PI) (Section 2.7 of [1])
-
-        % policy = ...;
-
-        % Check algorithm convergence
-        % if ...
-        %       break
-        % end
+        for a = 1:1:num_actions
+            if selected_action == a
+                policy(s, a) = 1 - epsilon + epsilon/num_actions;
+            else
+                policy(s, a) = epsilon/num_actions;
+            end
+        end
     end
     
-	% Return deterministic policy for plotting
-	[~, policy_index] = max(policy, [], 2);
+    V_last_g = [];
+    for  i = 1:max_ite_pe
+        V_last_g = V;
+        
+        %% policy Evaluation (PE) (Section 2.6 of [1])
+        V_last = [];
+        
+        for j = 1:max_ite_pi
+            V_last = V;
+            Q = zeros(num_states, num_actions);
+            for ai = 1:1:num_actions
+                Q(:, ai) = diag(T{ai}*transpose(R{ai})) + gamma*(T{ai}*V);
+            end
+            V = sum(policy.*Q, 2);
+            V_error = max(abs(V-V_last), [], 'all');
+            if V_error <= precision_pi || j >= max_ite_pi
+                disp(num2str(i) + ": " + num2str(j) +  ": Policy Evaluation Converged: " + num2str(V_error));
+                break;
+            end
+        end
+        
+        %% Policy Improvment (PI) (Section 2.7 of [1])
+        [~, policy_index] = max(Q,[],2);
+        policy = zeros(num_states, num_actions);
+        for s = 1:1:num_states
+            selected_action = policy_index(s);
+            for a = 1:1:num_actions
+                if selected_action == a
+                    policy(s, a) = 1 - epsilon + epsilon/num_actions;
+                else
+                    policy(s, a) = epsilon/num_actions;
+                end
+            end
+        end
+
+        final_error = max(abs(V-V_last_g), [], 'all');
+        % Check algorithm convergence
+        if final_error <= precision_pe || i >= max_ite_pe
+            disp(num2str(i) + ": Policy Iteration Converged: " + num2str(final_error));
+            break;
+        end
+        epsilon = epsilon*k_epsilon;
+    end
+    
+    % Return deterministic policy for plotting
+    [~, policy_index] = max(policy, [], 2);
 end

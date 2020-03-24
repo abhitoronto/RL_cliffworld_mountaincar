@@ -93,10 +93,10 @@ function [T, R] = build_stochastic_mdp_li(world, T, R)
             % [TODO] Assign probability to adjacent nodes (bilinear)
             x = next_state_normalized(1);
             y = next_state_normalized(2);
-            % prob(1) = ...; % min min
-            % prob(2) = ...; % max min
-            % prob(3) = ...; % max max
-            % prob(4) = ...; % min max
+            prob(1) = (1-x)*(1-y); % min min
+            prob(2) = (x)*(1-y); % max min
+            prob(3) = (x)*(y); % max max
+            prob(4) = (1-x)*(y); % min max
             
             % Update probability and reward for each node
             for i = 1:1:4
