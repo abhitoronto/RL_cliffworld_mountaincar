@@ -83,8 +83,8 @@ function [Q, policy_index] = ...
     for train_loop = 1:1:training_iterations
         R = [];
         episode_index = 0;
-        cur_state_index = randi(num_states);
-%         cur_state_index = s_start_index;
+%         cur_state_index = randi(num_states);
+        cur_state_index = s_start_index;
         %% Generate a training episode
 %         while ( cur_state_index ~= s_start_index && ...
 %                 cur_state_index ~= s_goal_index && ...

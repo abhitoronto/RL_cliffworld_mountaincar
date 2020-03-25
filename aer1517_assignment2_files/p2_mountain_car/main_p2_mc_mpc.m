@@ -30,9 +30,10 @@ clc;
 addpath(genpath(pwd));
 
 % MPC parameters
-n_lookahead = 100; % MPC prediction horizon
+n_lookahead = 75; % MPC prediction horizon
 n_mpc_update = 1; % MPC update frequency
-use_model = true;
+use_model = false;
+add_noise = false;
 
 % Cost function parameters
 Q = diag([100, 0]); % not penalizing velocity
@@ -58,7 +59,7 @@ fontsize = 12;
 max_steps = 500;
 
 % Standard deviation of simulated Gaussian measurement noise
-noise = [1e-3; 1e-5];
+noise = [3; 1];
 
 % Result and plot directory
 save_dir = './results/';
@@ -125,7 +126,11 @@ for k = 1:1:max_steps
             
             % Feedback state used in MPC updates
             % 'cur_state' or 'cur_state_noisy'
-            cur_state_mpc_update = cur_state;
+            if ~add_noise
+                cur_state_mpc_update = cur_state;
+            else
+                cur_state_mpc_update = cur_state_noisy;
+            end
             
             % Solve QP (e.g., using Matlab's quadprog function) 
             % Note 1: x is a vector containing the inputs and states over 

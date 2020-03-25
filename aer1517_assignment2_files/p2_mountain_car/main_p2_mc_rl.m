@@ -34,11 +34,11 @@ save_dir = './results/';
 mkdir(save_dir);
 
 %% Problem 2.2 (a)-(b) Create stochastic MDPs for the mountain car problem
-% [TODO] Load mountain car model
+% Load mountain car model
 % change model name correspondingly:
 %     (a) 'mountain_car_nn' for the nearest neighbour method
 %     (b) 'mountain_car_li' for the linear interpolation approach
-load('./mountain_car_model/mountain_car_nn');
+load('./mountain_car_model/mountain_car_li');
 
 %% Generalized policy iteration
 % Algorithm parameters 

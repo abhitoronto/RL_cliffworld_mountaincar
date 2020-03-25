@@ -58,6 +58,12 @@ function [Q, policy_index] = q_learning(world, epsilon, k_epsilon, omega, traini
     STATES = mdp.STATES;
     ACTIONS = mdp.ACTIONS;
 
+    % Start and end State 
+    s_start = world.user_defn.s_start;
+    s_goal = world.user_defn.s_goal;
+    s_start_index = state_index_lookup(STATES, s_start);
+    s_goal_index = state_index_lookup(STATES, s_goal);
+    
     % Dimensionts
     num_states = size(STATES, 2);
     num_actions = size(ACTIONS, 2);
@@ -82,7 +88,8 @@ function [Q, policy_index] = q_learning(world, epsilon, k_epsilon, omega, traini
         %% [TODO] Generate a training episode
         R = [];
         episode_index = 0;
-        cur_state_index = randi(num_states);
+%         cur_state_index = randi(num_states);
+        cur_state_index = s_start_index;
         while episode_index < episode_length
             episode_index = episode_index + 1;
             % Sample current epsilon-soft policy
@@ -96,7 +103,7 @@ function [Q, policy_index] = q_learning(world, epsilon, k_epsilon, omega, traini
             % [next_state_index, next_state_noisy_index, reward] = ...
             %    one_step_gw_model(world, cur_state_index, action, noise_alpha);
             [next_state_index, ~, reward] = one_step_gw_model(world, ...
-                                            cur_state_index, action, 1);
+                                            cur_state_index, action, noise_alpha);
 
             % Log data for the episode
             R = [R; cur_state_index, action, reward];

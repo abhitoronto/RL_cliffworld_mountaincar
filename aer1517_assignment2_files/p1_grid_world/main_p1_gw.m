@@ -50,112 +50,114 @@ addpath(genpath(pwd));
 save_dir = './results/';
 mkdir(save_dir);
 
-%% Problem 2.1: (a) Generalized Policy Iteration (GPI)
-% Instruction: Implement the GPI algorithm to solve the grid world problem
-% Reference: Section 2.8 of [1]
-
-% Parameters of the GPI algorithm
-precision_pi = 0.1;
-precision_pe = 0.01;
-max_ite_pi = 100;
-max_ite_pe = 100;
-
-
-fprintf('\n\n\t########### Policy Iteration ########\n')
-tic;
-% ======================= [TODO] PI Implementation =======================
-% Complete implementation in 'generalized_policy_iteration'
-[v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
-    precision_pe, max_ite_pi, max_ite_pe);
-% =========================================================================
-disp("[TIME] Policy Iteration took: " + num2str(toc) + " secs");
-
-% Visualization
-plt_title = ' Policy Iteration';
-plt_path = true;
-plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
-    plt_title, plt_path);
-
-% Save results and figure to report
-save(strcat(save_dir, 'pi_results.mat'), 'v_gpi', 'policy_gpi');
-saveas(plt_gpi, strcat(save_dir, 'pi_plot.png'), 'png');
-
-
-%%
-
-fprintf('\n\n\t########### Value Iteration ########\n')
-tic;
-max_ite_pi = 1;
-precision_vi = 0.0;
-% ======================= VII Implementation =======================
-% Complete implementation in 'generalized_policy_iteration'
-[v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
-    precision_vi, max_ite_pi, max_ite_pe);
-% =========================================================================
-disp("[TIME] Value Iteration took: " + num2str(toc) + " secs");
-
-% Visualization
-plt_title = 'Value Iteration';
-plt_path = true;
-plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
-    plt_title, plt_path);
-
-% Save results and figure to report
-save(strcat(save_dir, 'vi_results.mat'), 'v_gpi', 'policy_gpi');
-saveas(plt_gpi, strcat(save_dir, 'vi_plot.png'), 'png');
-
-%% Problem 2.1 (b): Linear Programming (LP)
-% Extra credit: Solve the grid world problem with the LP approach
-% References: [2, 3]
-% Possible tools for solving LPs: 
-%   1) Matlab's linprog function: 
-%        https://www.mathworks.com/help/optim/ug/linprog.html
-%   2) cvx library (requires installation): http://cvxr.com/cvx/
-
-tic;
-% =================== [TODO] LP Approach Implementation ===================
-% Complete implementation in 'linear_programming'
-[v_lp, policy_lp] = linear_programming(world);
-% =========================================================================
-disp("[TIME] Linear Programming took: " + num2str(toc) + " secs");
-
-% Visualization
-plt_title = 'Linear Program';
-plt_path = true;
-plt_lp = visualize_gw_solution(world, v_lp, policy_lp, ...
-    plt_title, plt_path);
-
-% Save results and figure to report
-save(strcat(save_dir, 'lp_results.mat'), 'v_lp', 'policy_lp');
-saveas(plt_lp, strcat(save_dir, 'lp_plot.png'), 'png');
-
-% Problem 2.1 (c): Monte Carlo
-Instruction: Implement the on-policy Monte Carlo control algorithm (with
-epsilon-soft policies) to solve the grid world algorithm
-Reference: Section 2.9 of [1]
-
-% Algorithm parameters
-epsilon = 0.6; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
-k_epsilon = 0.95; % epsilon decay factor
-omega = 0.15; % learning rate for updating Q
-training_iterations = 500; % maximum number of training episodes
-episode_length = 500; % length of each training episode
-
-% =================== [TODO] Monte-Carlo Implementation ===================
-% Complete implementation in 'monte_carlo'
-[q_mc, policy_mc] = monte_carlo(world, epsilon, k_epsilon, omega, ...
-    training_iterations, episode_length);
-% =========================================================================
-
-% Visualization
-plt_title = 'Monte Carlo';
-plt_path = true;
-plt_mc = visualize_gw_solution(world, q_mc, policy_mc, ...
-    plt_title, plt_path);
-
-% Save results and figure to report
-save(strcat(save_dir, 'mc_results.mat'), 'q_mc', 'policy_mc');
-saveas(plt_mc, strcat(save_dir, 'mc_plot.png'), 'png');
+% %% Problem 2.1: (a) Generalized Policy Iteration (GPI)
+% % Instruction: Implement the GPI algorithm to solve the grid world problem
+% % Reference: Section 2.8 of [1]
+% 
+% % Parameters of the GPI algorithm
+% precision_pi = 0.1;
+% precision_pe = 0.01;
+% max_ite_pi = 100;
+% max_ite_pe = 100;
+% 
+% 
+% fprintf('\n\n\t########### Policy Iteration ########\n')
+% tic;
+% % ======================= [TODO] PI Implementation =======================
+% % Complete implementation in 'generalized_policy_iteration'
+% [v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
+%     precision_pe, max_ite_pi, max_ite_pe);
+% % =========================================================================
+% disp("[TIME] Policy Iteration took: " + num2str(toc) + " secs");
+% 
+% % Visualization
+% plt_title = ' Policy Iteration';
+% plt_path = true;
+% plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
+%     plt_title, plt_path);
+% 
+% % Save results and figure to report
+% save(strcat(save_dir, 'pi_results.mat'), 'v_gpi', 'policy_gpi');
+% saveas(plt_gpi, strcat(save_dir, 'pi_plot.png'), 'png');
+% 
+% 
+% %%
+% 
+% fprintf('\n\n\t########### Value Iteration ########\n')
+% tic;
+% max_ite_pi = 1;
+% precision_vi = 0.0;
+% % ======================= VII Implementation =======================
+% % Complete implementation in 'generalized_policy_iteration'
+% [v_gpi, policy_gpi] = generalized_policy_iteration(world, precision_pi, ...
+%     precision_vi, max_ite_pi, max_ite_pe);
+% % =========================================================================
+% disp("[TIME] Value Iteration took: " + num2str(toc) + " secs");
+% 
+% % Visualization
+% plt_title = 'Value Iteration';
+% plt_path = true;
+% plt_gpi = visualize_gw_solution(world, v_gpi, policy_gpi, ...
+%     plt_title, plt_path);
+% 
+% % Save results and figure to report
+% save(strcat(save_dir, 'vi_results.mat'), 'v_gpi', 'policy_gpi');
+% saveas(plt_gpi, strcat(save_dir, 'vi_plot.png'), 'png');
+% 
+% %% Problem 2.1 (b): Linear Programming (LP)
+% % Extra credit: Solve the grid world problem with the LP approach
+% % References: [2, 3]
+% % Possible tools for solving LPs: 
+% %   1) Matlab's linprog function: 
+% %        https://www.mathworks.com/help/optim/ug/linprog.html
+% %   2) cvx library (requires installation): http://cvxr.com/cvx/
+% 
+% tic;
+% % =================== [TODO] LP Approach Implementation ===================
+% % Complete implementation in 'linear_programming'
+% [v_lp, policy_lp] = linear_programming(world);
+% % =========================================================================
+% disp("[TIME] Linear Programming took: " + num2str(toc) + " secs");
+% 
+% % Visualization
+% plt_title = 'Linear Program';
+% plt_path = true;
+% plt_lp = visualize_gw_solution(world, v_lp, policy_lp, ...
+%     plt_title, plt_path);
+% 
+% % Save results and figure to report
+% save(strcat(save_dir, 'lp_results.mat'), 'v_lp', 'policy_lp');
+% saveas(plt_lp, strcat(save_dir, 'lp_plot.png'), 'png');
+% 
+% % Problem 2.1 (c): Monte Carlo
+% % Instruction: Implement the on-policy Monte Carlo control algorithm (with
+% % epsilon-soft policies) to solve the grid world algorithm
+% % Reference: Section 2.9 of [1]
+% 
+% % Algorithm parameters
+% epsilon = 0.35; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
+% k_epsilon = 1.0; % epsilon decay factor
+% omega = 0.1; % learning rate for updating Q
+% training_iterations = 500; % maximum number of training episodes
+% episode_length = 500; % length of each training episode
+% 
+% % =================== [TODO] Monte-Carlo Implementation ===================
+% % Complete implementation in 'monte_carlo'
+% tic;
+% [q_mc, policy_mc] = monte_carlo(world, epsilon, k_epsilon, omega, ...
+%     training_iterations, episode_length);
+% % =========================================================================
+% disp("[TIME] Monte-Carlo took: " + num2str(toc) + " secs");
+% 
+% % Visualization
+% plt_title = 'Monte Carlo';
+% plt_path = true;
+% plt_mc = visualize_gw_solution(world, q_mc, policy_mc, ...
+%     plt_title, plt_path);
+% 
+% % Save results and figure to report
+% save(strcat(save_dir, 'mc_results.mat'), 'q_mc', 'policy_mc');
+% saveas(plt_mc, strcat(save_dir, 'mc_plot.png'), 'png');
 
 %% Problem 2.1 (d): Q Learning
 % Instruction: Implement the off-policy Q-learning algorithm (with
@@ -163,18 +165,20 @@ saveas(plt_mc, strcat(save_dir, 'mc_plot.png'), 'png');
 % Reference: Section 2.10 of [1]
 
 % Algorithm parameters
-epsilon = 0.3; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
-k_epsilon = 0.995; % epsilon decay factor
+epsilon = 0.5; % epsilon-soft policy parameter (see Eqn. (2.40) in [1])
+k_epsilon = 0.97; % epsilon decay factor
 omega = 0.1; % learning rate for updating Q
 training_iterations = 500; % maximum number of training episodes
 episode_length = 500; % length of each training episode
-noise_alpha = 1; % measurement noise for simulation
+noise_alpha = 1.0; % measurement noise for simulation
 
+tic;
 % =================== [TODO] Q-Learning Implementation ====================
 % Complete implementation in 'q_learning'
 [q_ql, policy_ql] = q_learning(world, epsilon, k_epsilon, omega, ...
     training_iterations, episode_length, noise_alpha);
 % =========================================================================
+disp("[TIME] Q-Learning took: " + num2str(toc) + " secs");
 
 % Visualization
 plt_title = 'Q Learning';
